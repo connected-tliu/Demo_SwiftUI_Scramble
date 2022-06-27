@@ -8,9 +8,33 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var usedWords = [String]()
+    @State private var rootWord = ""
+    @State private var newWord = ""
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView {
+            VStack {
+                TextField("Enter your word", text: $newWord, onCommit: addNewWord)
+                    .textFieldStyle(.roundedBorder)
+                    .padding()
+                    .textInputAutocapitalization(.none)
+                List(usedWords, id: \.self) { usedWord in
+                    Image(systemName: "\(usedWord.count).circle")
+                    Text(usedWord)
+                }
+            }
+            .navigationTitle(rootWord)
+        }
+    }
+    
+    func addNewWord() {
+        let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard answer.count > 0 else { return }
+        
+        usedWords.insert(answer, at: 0)
+        newWord = ""
     }
 }
 
